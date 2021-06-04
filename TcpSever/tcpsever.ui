@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>351</width>
-    <height>209</height>
+    <width>521</width>
+    <height>346</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <item row="0" column="0">
     <layout class="QVBoxLayout" name="verticalLayout_2">
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
+      <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,2,1,2">
        <item>
         <widget class="QLabel" name="label">
          <property name="text">
@@ -26,7 +26,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="IP"/>
+        <widget class="QComboBox" name="comboBox"/>
        </item>
        <item>
         <widget class="QLabel" name="label_2">
@@ -36,7 +36,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="Port"/>
+        <widget class="QLineEdit" name="Port">
+         <property name="text">
+          <string>8888</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>

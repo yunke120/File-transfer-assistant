@@ -5,6 +5,7 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QHostAddress>
+#include <QHostInfo>
 
 
 QT_BEGIN_NAMESPACE
@@ -21,6 +22,8 @@ public:
 
 private slots:
     void on_listen_clicked();
+
+    void on_reserve_clicked();
 
 private:
     Ui::TcpSever *ui;
