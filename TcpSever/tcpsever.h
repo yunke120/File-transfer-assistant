@@ -6,6 +6,8 @@
 #include <QTcpSocket>
 #include <QHostAddress>
 #include <QHostInfo>
+#include <QDataStream>
+#include <QFile>
 
 
 QT_BEGIN_NAMESPACE
@@ -30,5 +32,8 @@ private:
 
     QTcpServer *sever;
     QTcpSocket *socket;
+    QFile *file;
+    QDataStream *in;
+
 };
 #endif // TCPSEVER_H

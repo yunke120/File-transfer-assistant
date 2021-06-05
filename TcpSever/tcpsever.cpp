@@ -10,6 +10,9 @@ TcpSever::TcpSever(QWidget *parent)
     sever = new QTcpServer;
     socket = new QTcpSocket;
 
+
+    ui->progressBar->setRange(0, 100);
+    ui->progressBar->setValue(0);
     QString localHostName = QHostInfo::localHostName(); /* to get the host name of your computer. */
 
     QHostInfo info = QHostInfo::fromName(localHostName);
@@ -20,18 +23,50 @@ TcpSever::TcpSever(QWidget *parent)
     }
 
 
-
-
-
     connect(sever, &QTcpServer::newConnection, this, [=](){
         socket = sever->nextPendingConnection();
         QString ip = socket->peerAddress().toString();
-        quint16 port = socket->peerPort();
-
+        uint16_t port = socket->peerPort();
         ui->textEdit->append(QString("[%1:%2]: connect successfully.").arg(ip).arg(port));
-
+        ui->progressBar->setValue(0);
+        file = new QFile;
+        in = new QDataStream;
+        static uint64_t total_size = 0;
+        static uint64_t file_size = 0;
         connect(socket, &QTcpSocket::readyRead, this, [=]() {
-            ui->textEdit->append(QString("receive data: %1").arg(QString(socket->readAll())));
+            QByteArray array = socket->readAll();
+            if(QString(array).left(5) == "begin") {
+                ui->textEdit->append(QString(array));
+                QStringList l = QString(array).split(" ");
+                file_size = l.at(2).toUInt();
+
+                QString file_name = "./" + QString(array).split(" ").at(1);
+                ui->textEdit->append(QString("file will save at the path of [%1]").arg(file_name));
+
+                ui->progressBar->setValue(0);
+                file->setFileName(file_name);
+
+                if(file->open(QIODevice::WriteOnly)) {
+                    in->setVersion(QDataStream::Qt_4_9);
+                    in->setDevice(file);
+                    ui->textEdit->append("create file successfully");
+                    QString str = "DATA";
+                    socket->write(str.toLatin1().data(),str.length());
+                }else {
+                    ui->textEdit->append("failed to create file");
+                }
+
+            }
+            else {
+                total_size += array.size();
+                int value = (double(total_size) / file_size) * 100;
+                ui->progressBar->setValue(value);
+                in->writeRawData(array.data(), array.size());
+                if(value == 100) file->close();
+
+            }
+
+
         });
 
 
